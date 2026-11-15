@@ -31,10 +31,30 @@ terraform plan
 terraform apply
 ```
 
-## GitHub Actions
+## GitHub Actions Workflows
 
-- Plan runs on pull requests
-- Apply runs on push to `main`
+Three separate workflows:
+
+### 1. Terraform Plan (`terraform-plan.yml`)
+- **Triggers**:
+  - Pull requests to `main`
+  - Pushes to `main`
+  - Manual (`workflow_dispatch`)
+- Runs `terraform init`, `validate`, and `plan`
+- Posts the plan as a comment on PRs
+- Uploads the plan artifact
+
+### 2. Terraform Apply (`terraform-apply.yml`)
+- **Triggers**: Manual only (`workflow_dispatch`)
+- Requires confirmation input: type `apply`
+- Runs a fresh plan and then `terraform apply -auto-approve`
+
+### 3. Terraform Destroy (`terraform-destroy.yml`)
+- **Triggers**: Manual only (`workflow_dispatch`)
+- Requires confirmation input: type `destroy`
+- Runs `terraform destroy -auto-approve`
+
+**Warning**: Destroy is irreversible. Double-check before confirming.
 
 ## Next steps
 
